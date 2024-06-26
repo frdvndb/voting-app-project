@@ -14,17 +14,17 @@ contract Voting {
     uint256 public votingStart;
     uint256 public votingEnd;
 
-constructor(string[] memory _candidateNames, uint256 _durationInMinutes) {
-    for (uint256 i = 0; i < _candidateNames.length; i++) {
-        candidates.push(Candidate({
-            name: _candidateNames[i],
-            voteCount: 0
-        }));
+    constructor(string[] memory _candidateNames, uint256 _durationInMinutes) {
+        for (uint256 i = 0; i < _candidateNames.length; i++) {
+            candidates.push(Candidate({
+                name: _candidateNames[i],
+                voteCount: 0
+            }));
+        }
+        owner = msg.sender;
+        votingStart = block.timestamp;
+        votingEnd = block.timestamp + (_durationInMinutes * 1 minutes);
     }
-    owner = msg.sender;
-    votingStart = block.timestamp;
-    votingEnd = block.timestamp + (_durationInMinutes * 1 minutes);
-}
 
     modifier onlyOwner {
         require(msg.sender == owner);
@@ -37,6 +37,20 @@ constructor(string[] memory _candidateNames, uint256 _durationInMinutes) {
                 voteCount: 0
         }));
     }
+    ///
+    function startElection(string[] memory _candidateNames, uint256 _durationInMinutes) public onlyOwner {
+        for (uint256 i = 0; i < _candidateNames.length; i++) {
+            candidates.push(Candidate({
+                name: _candidateNames[i],
+                voteCount: 0
+            }));
+        }
+        owner = msg.sender;
+        votingStart = block.timestamp;
+        votingEnd = block.timestamp + (_durationInMinutes * 1 minutes);
+    }
+
+    ///
 
     function vote(uint256 _candidateIndex) public {
         require(!voters[msg.sender], "You have already voted.");

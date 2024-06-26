@@ -2,26 +2,70 @@
 <html lang="en">
 
 <head>
-    <title>To Do Decentralized Application</title>
+    <title>Soccer Voting System</title>
     <script src="main.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://cdn.ethers.io/lib/ethers-5.7.1.umd.min.js" type="application/javascript"></script>
     <title>Centered Form</title>
     <style>
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-            margin: 50px auto 0;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            background-image: url("https://c4.wallpaperflare.com/wallpaper/398/874/541/champions-league-stadium-wallpaper-preview.jpg");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Add a dark overlay to enhance the image */
+            background-blend-mode: multiply;
         }
 
-        button:hover {
-            background-color: #3e8e41;
+        .navbar {
+            background-color: #2196f3;
+            /* Beautiful blue color */
+            padding: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            background-color: #1a73e8;
+            /* Darker blue color for buttons */
+            transition: background-color 0.2s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #2196f3;
+            /* Lighter blue color on hover */
+        }
+
+        .navbar a.active {
+            background-color: #fff;
+            /* White color for active link */
+            color: #2196f3;
+            font-weight: bold;
+        }
+
+        .btn,
+        input[type="submit"] {
+            background-color: #2196f3;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .btn:hover,
+        input[type="submit"]:hover {
+            background-color: #1a73e8;
         }
 
         /* Paragraph styles */
@@ -60,25 +104,17 @@
             border-radius: 4px;
         }
 
-        input[type=submit] {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        input[type=submit]:hover {
-            background-color: #45a049;
-        }
-
         .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 50px;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            /* Add a rounded corner */
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Add a bit of transparency */
         }
 
         span {
@@ -86,28 +122,6 @@
             margin-bottom: 10px;
         }
 
-        /* Style the navigation bar */
-        .navbar {
-            overflow: hidden;
-            background-color: #333;
-            font-family: Arial;
-        }
-
-        /* Style the links inside the navigation bar */
-        .navbar a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-
-        /* Change the color of links on hover */
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
 
         #myTable {
             border-collapse: collapse;
@@ -127,53 +141,83 @@
             background-color: #f2f2f2;
             font-weight: bold;
         }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .navbar a {
+                padding: 10px;
+                margin: 10px;
+            }
+        }
+
+        #metamaskbtn {
+            background-color: red;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            transition: background-color 0.2s ease-in-out;
+
+        }
+
+        #metamaskbtn:hover {
+            background-color: #333;
+            ;
+        }
     </style>
 
 </head>
 
 <body>
-    <div class="navbar">
+    <nav class="navbar">
         <a href="/index.html">Vote</a>
-        <a href="/ListVoters.html">List Voters</a>
-    </div>
+        <button id="metamaskbtn" class="btn" onclick="connectMetamask()">Connect Metamask</button>
+        <a href="/ListVoters.html" class="active">List Voters</a>
+    </nav>
 
-    <div>
-        <button onclick="connectMetamask()">Connect Metamask</button>
-        <p id="metamasknotification"></p>
-    </div>
 
     <div class="container">
         <form method="POST" action="/vote" enctype="multipart/form-data">
-            <span>Add candidate here</span>
-            <input type="text" name="vote" placeholder="Add name of candidate ... ">
-            <input type="submit" value="Add Candidate">
+            <span>Add Soccer Player here</span>
+            <input type="text" name="vote" placeholder="Add name of player ... ">
+            <input type="submit" value="Add player">
         </form>
     </div>
+
 
     <div>
         <p id="votingStatus"></p>
     </div>
 
-    <div>
-        <button onclick="getAllCandidates()">List All Candidates</button>
-        <p id="p3"></p>
+    <div class="container">
+        <div>
+            <button class="btn" onclick="getAllCandidates()">List All Player</button>
+            <p id="p3"></p>
+        </div>
+
+        <div>
+            <table id="myTable">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Player name</th>
+                        <th>Player votes</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <div>
-        <table id="myTable">
-            <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>Candidate name</th>
-                    <th>Candidate votes</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-    </div>
-
 </body>
 
 </html>
