@@ -1,5 +1,5 @@
 let WALLET_CONNECTED = "";
-let contractAddress = "0x241f69F8991a1B6C0132Ea83bFD9c753a9971D7a";
+let contractAddress = "0x1Ccd797B0C4E2325C8FA93DA16291EfB735b76A1";
 let contractAbi = [
   {
     "inputs": [
@@ -191,6 +191,10 @@ const connectMetamask = async () => {
   var element = document.getElementById("metamaskbtn");
   element.style.backgroundColor = "green";
   element.innerHTML = "Metamask is connected " + WALLET_CONNECTED;
+  document.getElementById("startAnElection").disabled = false;
+  document.getElementById("addFootballer").disabled = false;
+  document.getElementById("startAnElection").innerHTML = "Start Voting"
+  document.getElementById("addFootballer").innerHTML = "Add Footballer"
 }
 
 const addVote = async () => {
@@ -242,40 +246,72 @@ const voteStatus = async () => {
   }
 }
 
+// const startVoting = async () => {
+//   const provider = new ethers.providers.Web3Provider(window.ethereum);
+//   await provider.send("eth_requestAccounts", []);
+//   const signer = provider.getSigner();
+//   const contractInstance = new ethers.Contract(contractAddress, contractAbi, signer);
+
+//   const candidates = document.querySelector('#candidates');
+//   const electionDuration = document.querySelector('#electionDuration');
+//   if(!candidates.value){
+//       alert('List of candidates is empty!');
+//   }
+//   if(!electionDuration.value){
+//       alert('Please set the election duration');
+//   }
+
+//   const _candidates = candidates.value.split(",");
+//   const _votingDuration = parseInt(electionDurationInput.value);
+
+//   const tx = await contractInstance.startElection(_candidates, _votingDuration);
+//   await tx.wait();
+
+//   getAllCandidates();
+// }
+
 const getAllCandidates = async () => {
-  if (WALLET_CONNECTED != 0) {
+  var p3 = document.getElementById("p3");
+  p3.innerHTML = "...";
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  const signer = provider.getSigner();
+  const contractInstance = new ethers.Contract(contractAddress, contractAbi, signer);
+  //p3.innerHTML = "Please wait, getting all the candidates from the voting smart contract";
+  var candidates = await contractInstance.getAllVotesOfCandiates();
+  console.log(candidates);
+  var table = document.getElementById("myTable");
 
-    var p3 = document.getElementById("p3");
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    const signer = provider.getSigner();
-    const contractInstance = new ethers.Contract(contractAddress, contractAbi, signer);
-    p3.innerHTML = "Please wait, getting all the candidates from the voting smart contract";
-    var candidates = await contractInstance.getAllVotesOfCandiates();
-    console.log(candidates);
-    var table = document.getElementById("myTable");
-    table.tBodies[0].innerHTML = ''
-    for (let i = 0; i < candidates.length; i++) {
-      var row = table.insertRow();
-      var idCell = row.insertCell();
-      var descCell = row.insertCell();
-      var statusCell = row.insertCell();
-
-      idCell.innerHTML = i + 1;
-      descCell.innerHTML = candidates[i].name;
-      statusCell.innerHTML = candidates[i].voteCount;
-    }
-
-    p3.innerHTML = "The tasks are updated"
+  // Clear the table before populating it with new data
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
   }
-  else {
-    var p3 = document.getElementById("p3");
-    p3.innerHTML = "Please connect metamask first";
+
+  for (let i = 0; i < candidates.length; i++) {
+    var row = table.insertRow();
+    var idCell = row.insertCell();
+    var descCell = row.insertCell();
+    var statusCell = row.insertCell();
+
+    idCell.innerHTML = i + 1;
+    descCell.innerHTML = candidates[i].name;
+    statusCell.innerHTML = candidates[i].voteCount;
   }
+
+    // Get the time in WIB
+    const now = new Date();
+    const timeDifference = 7 + (now.getTimezoneOffset() / 60); // WIB is UTC +7
+    const wibTime = new Date(now.getTime() + (timeDifference * 60 * 60 * 1000));
+
+    // Format the time as a string
+    const wibTimeString = wibTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+  // Display the time on the p3 element
+  p3.innerHTML = `The tasks are updated at ${wibTimeString}`;
 }
 
 
-const getAllCandidatesIndexPage = async() => {
+const getAllCandidatesIndexPage = async () => {
 
   //var p3i = document.getElementById("p3Index");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -286,16 +322,21 @@ const getAllCandidatesIndexPage = async() => {
   var candidates = await contractInstance.getAllVotesOfCandiates();
   console.log(candidates);
   var table = document.getElementById("myTableIndex");
-
+  // Clear the table before populating it with new data
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
+  }
   for (let i = 0; i < candidates.length; i++) {
     var row = table.insertRow();
     var idCell = row.insertCell();
     var descCell = row.insertCell();
     var statusCell = row.insertCell();
+    var voteCell = row.insertCell();
 
     idCell.innerHTML = i + 1;
     descCell.innerHTML = candidates[i].name;
-    //statusCell.innerHTML = await getVoteByPlayer(contractInstance, i);
+    //statusCell.innerHTML = candidates[i].voteCount;
+    voteCell.innerHTML = candidates[i].voteCount;
 
     // Create a Vote button
     const voteButton = document.createElement("button");
@@ -316,7 +357,7 @@ const getAllCandidatesIndexPage = async() => {
   //p3i.innerHTML = "The tasks are updated"
 }
 
-const addVoteEach = async(contractInstance, candidateIndex) => {
+const addVoteEach = async (contractInstance, candidateIndex) => {
 
 
   if (WALLET_CONNECTED != 0) {

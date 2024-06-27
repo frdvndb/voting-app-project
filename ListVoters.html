@@ -75,20 +75,10 @@
             margin-top: 50px;
         }
 
-
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 50px;
-        }
-
         input[type=text],
         select {
-            width: 30%;
+
             padding: 12px 20px;
-            margin: 8px 550px;
             box-sizing: border-box;
             border: 2px solid #ccc;
             border-radius: 4px;
@@ -96,7 +86,7 @@
 
         input[type=number],
         select {
-            width: 100%;
+            width: 30%;
             padding: 12px 20px;
             margin: 8px 0;
             box-sizing: border-box;
@@ -105,6 +95,7 @@
         }
 
         .container {
+
             max-width: 800px;
             margin: 40px auto;
             padding: 20px;
@@ -172,6 +163,99 @@
             background-color: #333;
             ;
         }
+
+        .input-group {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+
+        .input-group input[type="text"] {
+            flex: 1;
+        }
+
+        .input-group button[type="submit"] {
+            margin-left: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label {
+            width: 150px;
+            /* adjust the width to your liking */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"] {
+            flex: 1;
+        }
+
+        #startAnElection {
+            width: 100%;
+            /* make the button full width */
+        }
+
+        .form-padding {
+            padding-top: 20px;
+        }
+
+        h4 {
+            background-color: rgba(0, 0, 0, 0.1);
+            /* Add a darker background color */
+            text-align: center;
+            /* Center the text */
+            padding: 10px;
+            /* Add some padding */
+            width: 100%;
+            /* Set a maximum width */
+            margin: 0 auto;
+            /* Center the element horizontally */
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .big-container {
+            display: flex;
+            justify-content: space-between;
+
+
+            position: relative;
+            /* add this line */
+        }
+
+        .first-container {
+            width: 50%;
+        }
+
+        .second-container {
+            width: 50%;
+            position: relative;
+        }
+
+        .theTable {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        #p3 {
+            color: rgba(255, 255, 255, 0.8);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
+            /* set the width to 100% */
+            padding: 10px;
+            /* add some padding */
+            background-color: rgba(0, 0, 0, 0.1);
+            /* add a darker background color */
+        }
     </style>
 
 </head>
@@ -180,44 +264,73 @@
     <nav class="navbar">
         <a href="/index.html">Vote</a>
         <button id="metamaskbtn" class="btn" onclick="connectMetamask()">Connect Metamask</button>
-        <a href="/ListVoters.html" class="active">List Voters</a>
+        <a href="/ListVoters.html" class="active">Admin</a>
     </nav>
 
+    <div class="big-container">
+        <div class="container first-container">
+            <!-- <form method="POST" action="/startvote" enctype="multipart/form-data">
+                <div id="startElection">
+                  <h4>Start Voting</h4>
+                  <div class="form-group">
+                    <label for="candidates">Footballer</label>
+                    <input type="text" id="candidates" name="candidates" placeholder="Names separated by comma (,)" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="electionDuration">Voting Duration</label>
+                    <input type="number" id="electionDuration" name="electionDuration" placeholder="Duration in minutes" class="form-control">
+                  </div>
+                  <button id="startAnElection" type="submit" class="btn btn-primary" disabled>Start Voting (You are not connected to MetaMask)</button>
+                </div>
+              </form> -->
 
-    <div class="container">
-        <form method="POST" action="/vote" enctype="multipart/form-data">
-            <span>Add Soccer Player here</span>
-            <input type="text" name="vote" placeholder="Add name of player ... ">
-            <input type="submit" value="Add player">
-        </form>
-    </div>
-
-
-    <div>
-        <p id="votingStatus"></p>
-    </div>
-
-    <div class="container">
-        <div>
-            <button class="btn" onclick="getAllCandidates()">List All Player</button>
-            <p id="p3"></p>
+            <form method="POST" action="/vote" enctype="multipart/form-data" class="mt-4 form-padding">
+                <h4>Add Footballer</h4>
+                <div class="input-group">
+                    <input type="text" name="vote" placeholder="Add name of player ..." class="form-control">
+                    <button id="addFootballer" type="submit" class="btn btn-primary" disabled>Add Footballer (You are not connected to Metamask)</button>
+                </div>
+            </form>
         </div>
 
+        <!-- 
         <div>
-            <table id="myTable">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Player name</th>
-                        <th>Player votes</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <p id="votingStatus"></p>
+        </div> -->
 
-                </tbody>
-            </table>
+        <div class="container second-container ">
+            <!-- <div>
+                <button class="btn" onclick="getAllCandidates()">List All footballer</button>
+                <p id="p3"></p>
+            </div> -->
+
+            <div class=theTable>
+                <table id="myTable">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Footballer</th>
+                            <th>Number of Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+
         </div>
+
     </div>
+    <p id="p3">test</p>
+
 </body>
+<script>
+    // Call the getAllCandidates function initially
+    getAllCandidates();
+
+    // Set an interval to call the getAllCandidates function every 10 seconds
+    setInterval(getAllCandidates, 1000);
+</script>
 
 </html>

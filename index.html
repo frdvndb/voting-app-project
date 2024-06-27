@@ -167,12 +167,12 @@
     <nav class="navbar">
         <a href="/index.html" class="active">Vote</a>
         <button id="metamaskbtn" class="btn" onclick="connectMetamask()">Connect Metamask</button>
-        <a href="/ListVoters.html">List Voters</a>
+        <a href="/ListVoters.html">Admin</a>
     </nav>
 
     <div class="container">
         <h2>Welcome to the Soccer Player Voting Systemm</h2>
-        <p>Cast your vote for your favorite soccer player!</p>
+        <p>Cast your vote for your favorite footballer!</p>
         <button class="btn" onclick="voteStatus()">Check Voting Status</button>
         <p id="status"></p>
         <p id="time"></p>
@@ -196,8 +196,9 @@
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Player name</th>
+                            <th>Footballer</th>
                             <th>Vote here</th>
+                            <th>Result</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -227,12 +228,15 @@
             <p id="time"></p>
         </div>
     </div> -->
-    <script>
-        window.onload = function () {
-            getAllCandidatesIndexPage();
-        };
-    </script>
+
     <script src="main.js"></script>
+    <script>
+        // Call the getAllCandidates function initially
+        getAllCandidatesIndexPage();
+    
+        // Set an interval to call the getAllCandidates function every 10 seconds
+        setInterval(getAllCandidatesIndexPage, 1000);
+    </script>
 </body>
 
 </html>

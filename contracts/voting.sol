@@ -16,34 +16,36 @@ contract Voting {
 
     constructor(string[] memory _candidateNames, uint256 _durationInMinutes) {
         for (uint256 i = 0; i < _candidateNames.length; i++) {
-            candidates.push(Candidate({
-                name: _candidateNames[i],
-                voteCount: 0
-            }));
+            candidates.push(
+                Candidate({name: _candidateNames[i], voteCount: 0})
+            );
         }
         owner = msg.sender;
         votingStart = block.timestamp;
         votingEnd = block.timestamp + (_durationInMinutes * 1 minutes);
     }
 
-    modifier onlyOwner {
+    modifier onlyOwner() {
         require(msg.sender == owner);
         _;
     }
 
     function addCandidate(string memory _name) public onlyOwner {
-        candidates.push(Candidate({
-                name: _name,
-                voteCount: 0
-        }));
+        candidates.push(Candidate({name: _name, voteCount: 0}));
     }
     ///
-    function startElection(string[] memory _candidateNames, uint256 _durationInMinutes) public onlyOwner {
+    function startElection(
+        string[] memory _candidateNames,
+        uint256 _durationInMinutes
+    ) public onlyOwner {
+        uint256 length = candidates.length;
+        for (uint256 i = 0; i < length; i++) {
+            delete candidates[i];
+        }
         for (uint256 i = 0; i < _candidateNames.length; i++) {
-            candidates.push(Candidate({
-                name: _candidateNames[i],
-                voteCount: 0
-            }));
+            candidates.push(
+                Candidate({name: _candidateNames[i], voteCount: 0})
+            );
         }
         owner = msg.sender;
         votingStart = block.timestamp;
@@ -54,19 +56,22 @@ contract Voting {
 
     function vote(uint256 _candidateIndex) public {
         require(!voters[msg.sender], "You have already voted.");
-        require(_candidateIndex < candidates.length, "Invalid candidate index.");
+        require(
+            _candidateIndex < candidates.length,
+            "Invalid candidate index."
+        );
 
         candidates[_candidateIndex].voteCount++;
         voters[msg.sender] = true;
     }
 
-    function getAllVotesOfCandiates() public view returns (Candidate[] memory){
+    function getAllVotesOfCandiates() public view returns (Candidate[] memory) {
         return candidates;
     }
 
     function getVotingStatus() public view returns (bool) {
-    return (block.timestamp >= votingStart && block.timestamp < votingEnd);
-}
+        return (block.timestamp >= votingStart && block.timestamp < votingEnd);
+    }
 
     function getRemainingTime() public view returns (uint256) {
         require(block.timestamp >= votingStart, "Voting has not started yet.");
@@ -74,5 +79,5 @@ contract Voting {
             return 0;
         }
         return votingEnd - block.timestamp;
-}
+    }
 }
